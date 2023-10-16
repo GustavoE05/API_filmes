@@ -3,10 +3,11 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'League Spartan', sans-serif;
+  text-decoration: none;
 }
 
 body {
-  background-color: black;
+  background-color: #000d1a;
   color: white;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
