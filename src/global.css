@@ -6,6 +6,9 @@
   text-decoration: none;
 }
 
+span{
+  color: #ffff;
+}
 body {
   background-color: #000d1a;
   color: white;

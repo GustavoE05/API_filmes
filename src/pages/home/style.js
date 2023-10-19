@@ -4,8 +4,8 @@ export const Container = styled.div`
     padding: 2rem;
 
     h1 {
-        text-align: center;
-        margin: 4rem 0;
+        text-align: start;
+        margin: 1rem 0 0 1.2rem;
     }
 `;
 
@@ -22,21 +22,27 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: space-evenly;
-text-align: center; /* Alinha o texto ao centro */
+text-align: center; 
+margin-bottom: 2rem;
+margin-top: 1rem;
+margin-left: 0.3rem;
 img {
   width: 180px;
   margin-bottom: 2rem;
-  margin: 0 auto; /* Centraliza horizontalmente */
+  margin: 0 auto; 
+  border-radius: 5px;
 }
 span {
   font-weight: bold;
   font-size: 120%;
   text-align: center;
+  width: 170px;
+  margin-top: 0.5rem;
 }
-a {
+& {
   transition: all 0.3s;
 }
-a:hover {
+&:hover {
   transform: scale(1.1);
 }
 `;
@@ -54,18 +60,19 @@ export const Btn = styled.button`
     transition: all 250ms;
 `;
 
-
 export const BannerContainer = styled.div`
   position: relative;
   overflow: hidden;
 `;
 
 export const BannerImage = styled.img`
-  width: 100%;
-  height: 600px;
+  border-radius: 5px;
+  margin-left: 50px;
+  width: 45%;
+  height: auto;
   object-fit: cover;
   opacity: 0.8;
-  transition: opacity 0.5s; 
+  transition: opacity 0.5s;
 `;
 
 export const BannerGradient = styled.div`
@@ -74,15 +81,15 @@ export const BannerGradient = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)); 
 `;
 
 export const BannerText = styled.div`
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  top: 0px;
+  right: 5px; 
   color: #fff;
   z-index: 2;
+  max-width: 50%; 
 `;
 
 export const BannerTitle = styled.h2`
@@ -92,5 +99,18 @@ export const BannerTitle = styled.h2`
 
 export const BannerOverview = styled.p`
   font-size: 16px;
+  max-width: 70%; 
+`;
+
+export const HeaderContainer = styled.header`
+  background-color: #282c34;
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+`; 
+
+export const HeaderTitle = styled.h1`
+  font-size: 1.5rem;
+  margin: 0;
 `;
 

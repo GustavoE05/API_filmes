@@ -44,6 +44,7 @@ const Movie = () => {
             <p className="movie-info">Avaliação: {movie.vote_average}</p>
             <p className="movie-info">Popularidade: {movie.popularity}</p>
             <p className="movie-info">Idioma: {movie.original_language}</p>
+
           </div>
           <div className="descricao">
             <p className="movie-desc">{movie.overview}</p>

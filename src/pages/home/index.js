@@ -8,6 +8,9 @@ import {
   BannerGradient,
   BannerContainer,
   BannerImage,
+  BannerOverview,
+  BannerTitle,
+  BannerText,
 } from "./style";
 import { Link } from "react-router-dom";
 import Header from "./Header";
@@ -18,6 +21,7 @@ function Home() {
 
   const [movies, setMovies] = useState([]);
   const [bannerMovies, setBannerMovies] = useState([]);
+  const [series, setSeries] = useState([]); // Estado para séries
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [searchedMovies, setSearchedMovies] = useState([]); // Estado para os filmes pesquisados
@@ -33,6 +37,7 @@ function Home() {
     fetchBannerMovies();
     fetchTopRatedMovies();
     fetchUpcomingMovies();
+    fetchSeries(); // Busca séries ao carregar a página
   }, [KEY]);
 
   const fetchBannerMovies = async () => {
@@ -58,6 +63,15 @@ function Home() {
     );
     const data = await response.json();
     setUpcomingMovies(data.results);
+  };
+
+  // Função para buscar séries
+  const fetchSeries = async () => {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/tv/popular?api_key=${KEY}&language=pt-BR`
+    );
+    const data = await response.json();
+    setSeries(data.results);
   };
 
   const generateStars = (rating) => {
@@ -88,9 +102,9 @@ function Home() {
   const bannerSettings = {
     dots: true,
     infinite: true,
-    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
+    fade: true,
     autoplay: true,
     customPaging: function (i) {
       return <div className="custom-dot"></div>;
@@ -108,60 +122,6 @@ function Home() {
   };
 
   const movieSettings = {
-    dots: false,
-    infinite: true,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
-  const topRatedSettings = {
-    dots: false,
-    infinite: true,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
-  const upcomingSettings = {
     dots: false,
     infinite: true,
     slidesToShow: 6,
@@ -224,7 +184,15 @@ function Home() {
             {bannerMovies.map((movie) => (
               <div key={movie.id}>
                 <Link to={`/${movie.id}`}>
-                  <BannerImage src={`${imagePath}${movie.backdrop_path}`} alt={movie.title} />
+                  <div className="banner-content">
+                    <BannerImage src={`${imagePath}${movie.backdrop_path}`} alt={movie.title} />
+                    <div className="banner-text">
+                      <BannerText>
+                        <BannerTitle>{movie.title}</BannerTitle>
+                        <BannerOverview>{movie.overview}</BannerOverview>
+                      </BannerText>
+                    </div>
+                  </div>
                 </Link>
               </div>
             ))}
@@ -250,7 +218,7 @@ function Home() {
 
       <Container>
         <h1>Mais bem avaliados</h1>
-        <Slider {...topRatedSettings}>
+        <Slider {...movieSettings}>
           {topRatedMovies.map((movie) => (
             <Link to={`/${movie.id}`} key={movie.id}>
               <Movie>
@@ -265,7 +233,7 @@ function Home() {
 
       <Container>
         <h1>Próximos lançamentos</h1>
-        <Slider {...upcomingSettings}>
+        <Slider {...movieSettings}>
           {upcomingMovies.map((movie) => (
             <Link to={`/${movie.id}`} key={movie.id}>
               <Movie>
@@ -277,6 +245,24 @@ function Home() {
           ))}
         </Slider>
       </Container>
+
+      {}
+{series.length > 0 && (
+  <Container>
+    <h1>Séries populares</h1>
+    <Slider {...movieSettings}>
+      {series.map((serie) => (
+        <Link to={`/${serie.id}`} key={serie.id}>
+          <Movie>
+            <img src={`${imagePath}${serie.poster_path}`} alt={serie.name} />
+            <span>{serie.name}</span>
+            <div className="rating">{generateStars(serie.vote_average)}</div>
+          </Movie>
+        </Link>
+      ))}
+    </Slider>
+  </Container>
+)}
     </div>
   );
 }
