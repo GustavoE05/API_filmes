@@ -11,9 +11,11 @@ import {
   BannerOverview,
   BannerTitle,
   BannerText,
+  HeaderContainer,
+  HeaderTitle,
 } from "./style";
 import { Link } from "react-router-dom";
-import Header from "./Header";
+
 
 function Home() {
   const imagePath = "https://image.tmdb.org/t/p/w500";
@@ -21,11 +23,11 @@ function Home() {
 
   const [movies, setMovies] = useState([]);
   const [bannerMovies, setBannerMovies] = useState([]);
-  const [series, setSeries] = useState([]); // Estado para séries
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
-  const [searchedMovies, setSearchedMovies] = useState([]); // Estado para os filmes pesquisados
-  const [searchTerm, setSearchTerm] = useState(""); // Termo de pesquisa
+  const [searchedMovies, setSearchedMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [bannerMovieGenres, setBannerMovieGenres] = useState([]); // Estado para os gêneros do filme do banner
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${KEY}&language=pt-BR`)
@@ -37,8 +39,24 @@ function Home() {
     fetchBannerMovies();
     fetchTopRatedMovies();
     fetchUpcomingMovies();
-    fetchSeries(); // Busca séries ao carregar a página
   }, [KEY]);
+
+  const Header = () => {
+    return (
+      <HeaderContainer>
+        <HeaderTitle>Não sei o nome ainda</HeaderTitle>
+        
+        <input
+          type="text"
+          placeholder="Pesquisar filmes"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Pesquisar Filmes</button>
+        
+      </HeaderContainer>
+    );
+  };
 
   const fetchBannerMovies = async () => {
     const response = await fetch(
@@ -47,6 +65,9 @@ function Home() {
     const data = await response.json();
     const moviesWithBackdrop = data.results.filter((movie) => movie.backdrop_path);
     setBannerMovies(moviesWithBackdrop);
+    if (moviesWithBackdrop.length > 0) {
+      fetchMovieGenres(moviesWithBackdrop[0].id); 
+    }
   };
 
   const fetchTopRatedMovies = async () => {
@@ -65,13 +86,12 @@ function Home() {
     setUpcomingMovies(data.results);
   };
 
-  // Função para buscar séries
-  const fetchSeries = async () => {
+  const fetchMovieGenres = async (movieId) => {
     const response = await fetch(
-      `https://api.themoviedb.org/3/tv/popular?api_key=${KEY}&language=pt-BR`
+      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${KEY}&language=pt-BR`
     );
     const data = await response.json();
-    setSeries(data.results);
+    setBannerMovieGenres(data.genres);
   };
 
   const generateStars = (rating) => {
@@ -152,16 +172,6 @@ function Home() {
     <div>
       <Header />
 
-      <Container>
-        <input
-          type="text"
-          placeholder="Pesquisar filmes"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>Pesquisar Filmes</button>
-      </Container>
-
       {searchedMovies.length > 0 && (
         <Container>
           <Slider {...movieSettings}>
@@ -188,8 +198,13 @@ function Home() {
                     <BannerImage src={`${imagePath}${movie.backdrop_path}`} alt={movie.title} />
                     <div className="banner-text">
                       <BannerText>
-                        <BannerTitle>{movie.title}</BannerTitle>
-                        <BannerOverview>{movie.overview}</BannerOverview>
+                      <BannerTitle>{movie.title}</BannerTitle>
+                      <BannerOverview>{movie.overview}</BannerOverview>
+                      <div className="genres">
+                        {bannerMovieGenres.map((genre) => (
+                          <p key={genre.id}>{genre.name}</p>
+                        ))}
+                      </div>
                       </BannerText>
                     </div>
                   </div>
@@ -246,23 +261,6 @@ function Home() {
         </Slider>
       </Container>
 
-      {}
-{series.length > 0 && (
-  <Container>
-    <h1>Séries populares</h1>
-    <Slider {...movieSettings}>
-      {series.map((serie) => (
-        <Link to={`/${serie.id}`} key={serie.id}>
-          <Movie>
-            <img src={`${imagePath}${serie.poster_path}`} alt={serie.name} />
-            <span>{serie.name}</span>
-            <div className="rating">{generateStars(serie.vote_average)}</div>
-          </Movie>
-        </Link>
-      ))}
-    </Slider>
-  </Container>
-)}
     </div>
   );
 }

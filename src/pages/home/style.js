@@ -61,6 +61,7 @@ export const Btn = styled.button`
 `;
 
 export const BannerContainer = styled.div`
+  margin-top: 2rem;
   position: relative;
   overflow: hidden;
 `;
@@ -90,6 +91,9 @@ export const BannerText = styled.div`
   color: #fff;
   z-index: 2;
   max-width: 50%; 
+  span {
+    
+  }
 `;
 
 export const BannerTitle = styled.h2`
@@ -113,4 +117,3 @@ export const HeaderTitle = styled.h1`
   font-size: 1.5rem;
   margin: 0;
 `;
-
