@@ -13,6 +13,7 @@ import {
   BannerText,
   HeaderContainer,
   HeaderTitle,
+  Button,
 } from "./style";
 import { Link } from "react-router-dom";
 
@@ -26,8 +27,8 @@ function Home() {
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [searchedMovies, setSearchedMovies] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [bannerMovieGenres, setBannerMovieGenres] = useState([]); // Estado para os gêneros do filme do banner
+  const [searchTerm, setSearchTerm] = useState('');
+  const [bannerMovieGenres, setBannerMovieGenres] = useState([]); 
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${KEY}&language=pt-BR`)
@@ -42,22 +43,47 @@ function Home() {
   }, [KEY]);
 
   const Header = () => {
+    let searchTimeout;
+    const searchTermTimeout = 1;
+  
+    const handleSearch = (event) => {
+      const searchTerm = event.target.value;
+      clearTimeout(searchTimeout);
+  
+      searchTimeout = setTimeout(() => {
+        if (searchTerm) {
+          fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${KEY}&language=pt-BR&query=${searchTerm}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              setSearchedMovies(data.results);
+            });
+        } else {
+          setSearchedMovies([]);
+        }
+      }, searchTermTimeout);
+    };
+  
     return (
       <HeaderContainer>
-        <HeaderTitle>Não sei o nome ainda</HeaderTitle>
-        
-        <input
-          type="text"
-          placeholder="Pesquisar filmes"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>Pesquisar Filmes</button>
-        
+        <HeaderTitle>
+        <h1>CINEPULSE</h1>
+        </HeaderTitle>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Pesquisar filmes"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onInput={handleSearch}
+          />
+        </div>
       </HeaderContainer>
     );
   };
-
+  
+  
   const fetchBannerMovies = async () => {
     const response = await fetch(
       `https://api.themoviedb.org/3/movie/popular?api_key=${KEY}&language=pt-BR`
@@ -107,18 +133,7 @@ function Home() {
     return stars;
   };
 
-  const handleSearch = () => {
-    if (searchTerm) {
-      fetch(`https://api.themoviedb.org/3/search/movie?api_key=${KEY}&language=pt-BR&query=${searchTerm}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setSearchedMovies(data.results);
-        });
-    } else {
-      setSearchedMovies([]);
-    }
-  };
-
+  
   const bannerSettings = {
     dots: true,
     infinite: true,
@@ -188,33 +203,35 @@ function Home() {
         </Container>
       )}
 
-      {bannerMovies.length > 0 && (
-        <BannerContainer>
-          <Slider {...bannerSettings}>
-            {bannerMovies.map((movie) => (
-              <div key={movie.id}>
-                <Link to={`/${movie.id}`}>
-                  <div className="banner-content">
-                    <BannerImage src={`${imagePath}${movie.backdrop_path}`} alt={movie.title} />
-                    <div className="banner-text">
-                      <BannerText>
-                      <BannerTitle>{movie.title}</BannerTitle>
-                      <BannerOverview>{movie.overview}</BannerOverview>
-                      <div className="genres">
-                        {bannerMovieGenres.map((genre) => (
-                          <p key={genre.id}>{genre.name}</p>
-                        ))}
-                      </div>
-                      </BannerText>
-                    </div>
-                  </div>
-                </Link>
+{bannerMovies.length > 0 && (
+  <BannerContainer>
+  <Slider {...bannerSettings}>
+    {bannerMovies.map((movie) => (
+      <div key={movie.id}>
+        <div className="banner-content">
+          <BannerImage src={`${imagePath}${movie.backdrop_path}`} alt={movie.title} />
+          <div className="banner-text">
+            <BannerText>
+              <BannerTitle>{movie.title}</BannerTitle>
+              <BannerOverview>{movie.overview}</BannerOverview>
+              <div className="genres">
+                {bannerMovieGenres.map((genre) => (
+                  <p key={genre.id}>{genre.name}</p>
+                ))}
               </div>
-            ))}
-            <BannerGradient />
-          </Slider>
-        </BannerContainer>
-      )}
+              {}
+              <Link to={`/${movie.id}`}>
+                <Button>Ver Mais</Button>
+              </Link>
+            </BannerText>
+          </div>
+        </div>
+      </div>
+    ))}
+    <BannerGradient />
+  </Slider>
+</BannerContainer>
+)}
 
       <Container>
         <h1>Filmes populares</h1>

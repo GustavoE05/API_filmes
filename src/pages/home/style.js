@@ -47,19 +47,6 @@ span {
 }
 `;
 
-export const Btn = styled.button`
-    margin-top: 5px;
-    padding: 0.7rem 3rem;
-    border: none;
-    border-radius: 15px;
-    color: #212121;
-    background-color: #ffffff;
-    font-weight: 1000;
-    font-size: 12 px;
-    cursor: pointer;
-    transition: all 250ms;
-`;
-
 export const BannerContainer = styled.div`
   margin-top: 2rem;
   position: relative;
@@ -91,29 +78,67 @@ export const BannerText = styled.div`
   color: #fff;
   z-index: 2;
   max-width: 50%; 
-  span {
-    
-  }
+  
 `;
 
 export const BannerTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 8px;
+  margin-left: 1.3rem;
 `;
 
 export const BannerOverview = styled.p`
   font-size: 16px;
   max-width: 70%; 
+  margin-left: 1.3rem;
 `;
 
 export const HeaderContainer = styled.header`
-  background-color: #282c34;
-  color: white;
-  padding: 1rem 0;
-  text-align: center;
-`; 
+background-color: #282c34;
+color: white;
+padding: 1rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    flex: 1;
+    height: 30px;
+    width: 300px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: #282c34;
+    border: 1px solid #fff;
+    padding: 0 10px;
+  }
+}
+`;
 
 export const HeaderTitle = styled.h1`
   font-size: 1.5rem;
   margin: 0;
+  margin-left: 1.2rem;
+`;
+
+export const Button = styled.button`
+  background-color: #333;
+  margin-top: 1rem;
+  margin-left: 1.3rem;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #555;
+  }
 `;

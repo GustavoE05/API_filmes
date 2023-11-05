@@ -1,5 +1,3 @@
-/* Movie.js */
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -10,27 +8,23 @@ const Movie = () => {
   const imagePath = "https://image.tmdb.org/t/p/w500";
 
   const [movie, setMovie] = useState([]);
-  const [genres, setGenres] = useState([]); // Estado para os gêneros do filme
+  const [genres, setGenres] = useState([]); 
   const KEY = process.env.REACT_APP_KEY;
 
   useEffect(() => {
-    // Obter detalhes do filme
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${KEY}&language=pt-BR`)
       .then((response) => response.json())
       .then((data) => {
         setMovie(data);
-        setGenres(data.genres); // Define os gêneros do filme
+        setGenres(data.genres); 
       });
   }, [id, KEY]);
 
   return (
     <div>
-      <header>
-        {/* Seu conteúdo de cabeçalho aqui */}
-      </header>
       <div className="movie-container">
         <nav>
-          {/* Navigation links */}
+          {}
         </nav>
         <div className="container">
           <img
@@ -68,9 +62,6 @@ const Movie = () => {
           </div>
         </div>
       </div>
-      <footer>
-        {}
-      </footer>
     </div>
   );
 };
